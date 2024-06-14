@@ -1,42 +1,53 @@
-import mongoose, {Schema} from "mongoose"; 
-import bcrypt from "bcrypt"
-
+import mongoose, { Schema } from "mongoose";
 
 const userSchema = new Schema({
-        userName: {
-            type: String,
-            required: true,
-            unique: true,
-            lowercase: true,
-            trim: true, 
-            index: true
-        },
-        email: {
-            type: String,
-            required: true,
-            unique: true,
-            lowecase: true,
-            trim: true, 
-            index: true,
-        },
-        fullName: {
-            type: String,
-            required: true,
-            trim: true,  
-        },
-        password: {
-            type: String,
-            required: [true, 'Password is required']
-        },
-        refreshToken: {
-            type: String
-        }
-
-      },
-      {
-          timestamps: true
-      }
+    userName: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true,
+        trim: true, 
+        index: true
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true,
+        trim: true, 
+        index: true,
+    },
+    fullName: {
+        type: String,
+        required: true,
+        trim: true,  
+    },
+    password: {
+        type: String,
+        required: [true, 'Password is required']
+    },
+    refreshToken: {
+        type: String,
+        default: null,
+    },
+    accessToken: {
+        type: String,
+        default: null,
+    },
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
+    verificationToken: {
+        type: String,
+    },
+    verificationTokenExpires: {
+        type: Date,
+    }
+  },
+  {
+      timestamps: true
+  }
 )
-
 
 export const User = mongoose.model("User", userSchema);

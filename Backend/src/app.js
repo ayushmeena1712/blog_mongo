@@ -2,6 +2,8 @@ import express, { json } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import userRouter from './routes/user.routes.js'; 
+import blogRouter from './routes/blog.routes.js';
+import categoryRouter from './routes/category.routes.js';
 
 const app = express();
 app.use(cors({
@@ -14,6 +16,8 @@ app.use(express.urlencoded({ extended: true, limit: '16kb' }));
 app.use(express.static("public"));
 
 app.use('/api/users', userRouter);
+app.use('/api/blogs', blogRouter);
+app.use('/api/category', categoryRouter); 
 app.get("/", (req, res)=>{
       res.status(200).send("chal ja re");
 })
