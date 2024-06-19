@@ -10,6 +10,10 @@ const blogSchema = new Schema({
           type: String,
           required: true
         },
+        blogImage: {
+          type: String,
+          required: true
+        },
         categoryId:
         {
           type: Schema.Types.ObjectId,

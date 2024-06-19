@@ -4,6 +4,7 @@ import { Category } from "../model/category.model.js";
 export const createBlog = async (req, res) => {
   try {
     const { title, content , categoryId, userId} = req.body;
+    const { blogImage} = req.files[0];
     const blog = await Blog.create({
       title: title,
       content: content,

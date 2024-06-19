@@ -133,3 +133,69 @@ export const logout = (req, res) => {
   res.clearCookie('token');
   res.status(200).send("Logout successful");
 }
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { emailOrUsername } = req.body;
+    const user = await User.findOne({ $or: [{ userName: emailOrUsername }, { email: emailOrUsername }] });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const verificationToken = JWT.sign({ id: user._id }, process.env.JWTSECRET, { expiresIn: '1h' });
+
+    user.verificationToken = verificationToken;
+    user.verificationTokenExpires = Date.now() + 3600000;
+    await user.save();
+
+    const verificationUrl = `http://localhost:${process.env.PORT}/api/users/verify-forgot-password/${verificationToken}`;
+    await sendingMail({
+      from: "no-reply@example.com",
+      to: user.email, // Ensure you're sending the email to the correct user email
+      subject: "Password Reset Request",
+      html: `
+        <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+          <p>Hello, <strong>${user.userName}</strong>. Please reset your password by clicking the link below:</p>
+          <p>
+            <a href="${verificationUrl}"
+               style="display: inline-block; padding: 10px 20px; margin-top: 10px; background-color: #28a745; color: #fff; text-decoration: none; border-radius: 5px;"
+               target="_blank">Reset Password</a>
+          </p>
+          <p>If you did not request this, please ignore this email.</p>
+        </div>
+      `,
+    });
+
+    return res.status(202).json({ message: "Check your email for password reset link" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}
+
+export const verifyForgotPassword = async (req, res) => {
+  try {
+    const { secret } = req.params;
+    const { newPassword } = req.body;
+
+    if (!newPassword) {
+      return res.status(400).json({ message: "New password is required" });
+    }
+
+    const decoded = JWT.verify(secret, process.env.JWTSECRET);
+    const user = await User.findById(decoded.id);
+
+    if (!user || user.verificationToken !== secret || user.verificationTokenExpires < Date.now()) {
+      return res.status(400).json({ message: "Invalid or expired verification token" });
+    }
+
+    const saltRounds = 10;
+    user.password = await bcrypt.hash(newPassword, saltRounds);
+    user.verificationToken = undefined;
+    user.verificationTokenExpires = undefined;
+    await user.save();
+
+    return res.status(200).json({ message: "Password has been reset successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}
