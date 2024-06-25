@@ -23,6 +23,7 @@ export const deleteCategory = async(req, res) => {
 
 export const getCategories = async(req, res) => {
       try {
+            console.log("Inside the getCategories method ");
             const categories = await Category.find();
             return res.status(200).json(categories);
       } catch (error) {

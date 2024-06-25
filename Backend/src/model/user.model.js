@@ -30,10 +30,6 @@ const userSchema = new Schema({
         type: String,
         default: null,
     },
-    accessToken: {
-        type: String,
-        default: null,
-    },
     isVerified: {
         type: Boolean,
         default: false,
@@ -48,6 +44,6 @@ const userSchema = new Schema({
   {
       timestamps: true
   }
-)
+);
 
 export const User = mongoose.model("User", userSchema);

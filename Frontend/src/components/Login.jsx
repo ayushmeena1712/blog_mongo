@@ -4,11 +4,31 @@ import Input from './Input.jsx'
 import { useForm } from "react-hook-form";
 import Wrapper from "./Wrapper.jsx";
 import Button from "./Button.jsx";
+// import axios from '../axiosInstance.js';
+import useAxiosPrivate from '../Hooks/useAxiosPrivate.js';
+import { useAuth } from "../Authcontext.jsx";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
-
-  const { register, handleSubmit } = useForm();
+  const navigate = useNavigate();
+  const { setAuth, auth } = useAuth();
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const [error, setError] = useState(null);
+  const axios = useAxiosPrivate();
+  const onSubmit = async (data) => {
+    try {
+      const response = await axios.post('/api/users/login', data);
+      const { accessToken, refreshToken } = response.data;
+      console.log(response.data);
+      setAuth({ accessToken, refreshToken });
+      console.log("Auth context :", auth);
+      navigate('/');
+      setError(null);
+    } catch (error) {
+      console.error('Login error:', error);
+      setError(error.response?.data?.message || 'An error occurred during login.');
+    }
+  };
 
   return (
     <Wrapper className={'h-full py-40'}>
@@ -27,36 +47,32 @@ function Login() {
         <p className="mt-2 text-center text-base text-[#254336]">
           Don't have any account ?{" "}
           <a
-            to="/signup"
+            href="/signup"
             className="font-medium  text-primary transition-all duration-200 hover:underline text-[#254336]"
           >
             Sign Up
           </a>
         </p>
         {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
-        <form className="mt-8">
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
           <div className="space-y-5">
             <Input
-              label="Email: "
-              placeholder="Enter your email"
-              type="email"
-              {...register("email", {
-                required: true,
-                validate: {
-                  matchPatern: (value) =>
-                    /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
-                    "Email address must be a valid address",
-                },
+              label="Username or Email: "
+              placeholder="Enter your username or email"
+              {...register("userName", {
+                required: "Username or email is required",
               })}
             />
+            {errors.userName && <p className="text-red-600">{errors.userName.message}</p>}
             <Input
               label="Password: "
               type="password"
               placeholder="Enter your password"
               {...register("password", {
-                required: true,
+                required: "Password is required",
               })}
             />
+            {errors.password && <p className="text-red-600">{errors.password.message}</p>}
             <Button type="submit" className="w-full">
               Sign in
             </Button>

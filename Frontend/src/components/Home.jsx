@@ -19,7 +19,6 @@ function Home() {
         color3: generateRandomColor(),
       });
     };
-
     const intervalId = setInterval(changeGradient, 3000);
 
     return () => clearInterval(intervalId);

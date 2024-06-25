@@ -1,10 +1,9 @@
 import mongoose, {Schema} from "mongoose"; 
-
-
+ 
 const blogSchema = new Schema({
-        title: {
+        title: { 
           type: String,
-          required: true
+          required: true 
         },
         content: {
           type: String,

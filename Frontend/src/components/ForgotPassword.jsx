@@ -14,17 +14,17 @@ function ForgotPassword() {
     setError("");
     setMessage("");
     console.log(data);
-//     try {
-//       const response = await axios.post("/api/users/forgot-password", data);
+    try {
+      const response = await axios.post("/api/users/forgot-password", data);
 
-//       if (response.status === 202) {
-//         setMessage(response.data.message);
-//       } else {
-//         setError(response.data.message);
-//       }
-//     } catch (err) {
-//       setError(err.response?.data?.message || "Something went wrong. Please try again.");
-//     }
+      if (response.status === 202) {
+        setMessage(response.data.message);
+      } else {
+        setError(response.data.message);
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "Something went wrong. Please try again.");
+    }
   };
 
   return (

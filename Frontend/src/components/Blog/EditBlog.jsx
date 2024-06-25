@@ -1,57 +1,65 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import Input from "../Input.jsx";
 import Wrapper from "../Wrapper.jsx";
-
-const categories = [
-    { id: '1', name: 'Technology' },
-    { id: '2', name: 'Health' },
-    { id: '3', name: 'Finance' },
-    // Add more categories as needed
-];
-
-// Mock blog data
-const blog = {
-    title: "Sample Blog Title",
-    content: "Sample Blog Content",
-    blogImage: "https://via.placeholder.com/150",
-    categoryId: '1'
-};
+import { updateBlog, getBlog, fetchBlogs } from "../../app/blogSlice.js";
 
 function EditBlog() {
     const { id } = useParams();
+    const dispatch = useDispatch();
     const { register, handleSubmit, setValue, watch } = useForm();
-    const [currentImage, setCurrentImage] = useState(blog.blogImage);
+    const [currentImage, setCurrentImage] = useState(null);
+    const categories = useSelector(state => state.categories.categories);
+    const blog = dispatch(getBlog(id));
 
     useEffect(() => {
-        // Pre-fill form fields with mock blog data
-        setValue("title", blog.title);
-        setValue("content", blog.content);
-        setValue("blogImage", blog.blogImage);
-        setValue("categoryId", blog.categoryId);
-    }, [setValue]);
+        if (!blog) {
+            dispatch(fetchBlogs());
+        }
+    }, [blog, dispatch]);
+
+    useEffect(() => {
+        if (blog) {
+            setValue("title", blog.title);
+            setValue("content", blog.content);
+            setValue("categoryId", blog.categoryId);
+            setCurrentImage(blog.blogImage);
+        }
+    }, [blog, setValue]);
 
     const handleBlogUpdate = (data) => {
-        console.log(data); // Replace this with actual update logic
-    };
+        const formData = new FormData();
+        formData.append('title', data.title);
+        formData.append('content', data.content);
+        formData.append('categoryId', data.categoryId);
+        formData.append('userId', blog.userId);
+       
+        if (data.blogImage && data.blogImage.length > 0) {
+          formData.append('blogImage', data.blogImage[0]);
+        } else { 
+          formData.append('blogImage', blog.blogImage);
+        }
+      
+        dispatch(updateBlog({ id, blogData: formData }));
+      };
+      
 
-    // Watch the blogImage input field for changes
     const blogImage = watch("blogImage");
 
-    // Update the preview when the blogImage input field changes
-//     useEffect(() => {
-//         if (blogImage && blogImage.length > 0) {
-//             const file = blogImage[0]; // Access the first file in the array
-//             if (file) {
-//                 const reader = new FileReader();
-//                 reader.onloadend = () => {
-//                     setCurrentImage(reader.result);
-//                 };
-//                 reader.readAsDataURL(file);
-//             }
-//         }
-//     }, [blogImage]);
+    useEffect(() => {
+        if (blogImage && blogImage.length > 0) {
+            const file = blogImage[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setCurrentImage(reader.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    }, [blogImage]);
 
     return (
         <Wrapper className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-[#254336] bg-opacity-60 rounded-lg">
@@ -89,14 +97,14 @@ function EditBlog() {
                         )}
                         <Input
                             type="file"
-                        //     label="Blog Image"
+                            label="Blog Image"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                             {...register("blogImage")}
                             id="blogImage"
                         />
                     </div>
                     <div>
-                        <label className="" htmlFor="categoryId">
+                        <label htmlFor="categoryId">
                             Category
                         </label>
                         <select

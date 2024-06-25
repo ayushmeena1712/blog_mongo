@@ -1,26 +1,37 @@
 import React, { useState } from "react";
-// import {Link ,useNavigate} from 'react-router-dom'
 import { useForm } from "react-hook-form";
+import axios from '../axiosInstance.js';
 import Wrapper from "./Wrapper.jsx";
 import Input from "./Input.jsx";
 import Button from "./Button.jsx";
-import FileInput from "./FileInput.jsx";
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
   const [error, setError] = useState("");
   const { register, handleSubmit } = useForm();
-
+  const navigate = useNavigate();
   const create = async (data) => {
     setError("");
-    try {
-      const userData = await authService.createAccount(data);
-      if (userData) {
-        const userData = await authService.getCurrentUser();
-        if (userData) dispatch(login(userData));
-        navigate("/");
+    try { 
+      const formData = new FormData();
+      formData.append("userImage", data.userImage[0]);
+      formData.append("fullName", data.fullName);
+      formData.append("userName", data.userName);
+      formData.append("email", data.email);
+      formData.append("password", data.password);
+
+      const response = await axios.post('/api/users/register', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      if (response.data) {
+        console.log("Registration successful:", response.data);
+        navigate('../');
       }
     } catch (error) {
-      setError(error.message);
+      setError(error.response?.data?.message || error.message);
     }
   };
 
@@ -39,7 +50,7 @@ function Signup() {
           <p className="mt-2 text-center text-base text-black/60">
             Already have an account?&nbsp;
             <a
-              to="/login"
+              href="/login"
               className="font-medium text-primary transition-all duration-200 hover:underline"
             >
               Sign In
@@ -49,18 +60,23 @@ function Signup() {
 
           <form onSubmit={handleSubmit(create)}>
             <div className="space-y-5">
-              <Input label="User Image" placeholder="User Image" type="file" {...register("userImage", { required: true})} />
+              <Input
+                label="User Image"
+                placeholder="User Image"
+                type="file"
+                {...register("userImage", { required: true })}
+              />
               <Input
                 label="Full Name: "
                 placeholder="Enter your full name"
-                {...register("name", {
+                {...register("fullName", {
                   required: true,
                 })}
               />
               <Input
                 label="Username: "
                 placeholder="Enter the user name"
-                {...register("name", {
+                {...register("userName", {
                   required: true,
                 })}
               />
@@ -71,7 +87,7 @@ function Signup() {
                 {...register("email", {
                   required: true,
                   validate: {
-                    matchPatern: (value) =>
+                    matchPattern: (value) =>
                       /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(
                         value
                       ) || "Email address must be a valid address",

@@ -1,8 +1,12 @@
-import { configureStore } from "@reduxjs/toolkit";
-// import todoReducer from "../features/todo/todoSlice"; 
+import { configureStore } from '@reduxjs/toolkit';
+import categoryReducer from './categorySlice.js';
+import blogReducer from './blogSlice.js'; 
 
-// export const store = configureStore(
-//       {
-//             reducer: todoReducer,
-//       }
-// )
+const store = configureStore({
+  reducer: {
+    categories: categoryReducer,
+    blog: blogReducer,
+  },
+});
+
+export default store;

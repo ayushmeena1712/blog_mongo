@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const createJwt = (data) => {
+export const createJwt = (data) => {
   return jwt.sign(
     {
       data: data,
@@ -10,8 +10,16 @@ const createJwt = (data) => {
   );
 };
 
-const verifyJwt = async (token) => {
+export const verifyJwt = async (token) => {
   return jwt.verify(token, process.env.JWT_SECRET);
 };
+ 
+export const generateAccessToken = (user) => {
+    return jwt.sign({ _id: user._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '5s' });
+};
 
-export { createJwt, verifyJwt };
+export const generateRefreshToken = (user) => {
+    return jwt.sign({ _id: user._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+};
+
+
