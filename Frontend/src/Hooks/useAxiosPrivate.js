@@ -5,7 +5,7 @@ import {useAuth} from '../Authcontext.jsx';
 
 const useAxiosPrivate = () => {
   const refresh = useRefreshToken();
-  const { auth } = useAuth();
+  const { auth, setAuth } = useAuth();
 
   useEffect(() => {
     console.log('Setting up interceptors');
@@ -43,6 +43,7 @@ const useAxiosPrivate = () => {
           return axiosPrivate(prevRequest);
         }else{
           console.log('Failed to refresh access token');
+          setAuth(null);
         }
         return Promise.reject(error);
       }
