@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import usePrivateAxios from '../../usePrivateAxios.js';
 import BlogTile from './BlogTile';
+import { Link } from 'react-router-dom';
 
 function BlogPage() {
   const axios = usePrivateAxios();
@@ -17,6 +18,7 @@ function BlogPage() {
   const fetchBlogs = async () => {
     try {
       const response = await axios.post('/api/blogs');
+      console.log("blog int eh blogpage : ", response)
       setBlogs(response.data);
       setBlogsLoading(false);
     } catch (error) {
@@ -81,13 +83,14 @@ function BlogPage() {
         ) : filteredBlogs.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredBlogs.map((blog) => (
+              <Link to={`/blog/${blog._id}`}>
               <BlogTile
                 key={blog._id}
-                id = {blog._id}
                 img={blog.blogImage}
                 title={blog.title}
                 date={new Date(blog.createdAt).toLocaleDateString()}
               />
+              </Link>
             ))}
           </div>
         ) : (

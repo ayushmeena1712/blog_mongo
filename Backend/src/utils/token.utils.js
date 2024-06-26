@@ -15,7 +15,7 @@ export const verifyJwt = async (token) => {
 };
  
 export const generateAccessToken = (user) => {
-    return jwt.sign({ _id: user._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '5s' });
+    return jwt.sign({ _id: user._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
 };
 
 export const generateRefreshToken = (user) => {

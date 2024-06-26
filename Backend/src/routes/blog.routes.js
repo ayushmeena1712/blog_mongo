@@ -10,6 +10,6 @@ router.route('/add-blog').post(verifyJWT, upload.single('blogImage'), createBlog
 router.route('/:blog').put(upload.single('blogImage'), updateBlog);
 router.route('/:blog').delete(deleteBlog);
 router.route('/:blog').get(getBlog);
-router.route('/userprofile').post(verifyJWT, getUserBlogs);
+router.route('/userProfile').post(verifyJWT, getUserBlogs);
 
 export default router;

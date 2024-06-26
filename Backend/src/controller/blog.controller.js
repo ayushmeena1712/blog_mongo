@@ -64,7 +64,8 @@ const updateBlog = async (req, res) => {
 
 const deleteBlog = async (req, res) => {
   try {
-    const blog = await Blog.findByIdAndDelete(req.params.id);
+    console.log("req.params : ", req.params);
+    const blog = await Blog.findByIdAndDelete(req.params.blog);
     console.log(`Blog deleted is ${blog}`);
 
     if (blog) {
@@ -78,6 +79,7 @@ const deleteBlog = async (req, res) => {
     }
     return res.status(204).send("blog is deleted successfully");
   } catch (error) {
+    console.error("Error: " + error.message);
     return res.status(404).send("Couldn't delete blog");
   }
 };
@@ -110,12 +112,13 @@ const getAllBlogs = async (req, res) => {
 
 const getUserBlogs = async (req, res) => {
   try {
-  //   const { userId } = req.user._id;
-  //   const blog = Blog.find({ userId: userId });
-  //   return res.status(200).json(blog);
-  console.log("hello workding fine");
-  return res.status(200).json
+    const userId = req.user._id;
+    console.log("user : ", req.user);
+    const blog = await Blog.find({ userId: userId });
+    console.log('blog : ', blog.data);
+    return res.status(200).json({blog: blog, userImage: req.user.userImage}); 
   } catch (error) {
+    console.error("Error : ", error.message);
     return res.status(500).json({ message: error.message });
   }
 };

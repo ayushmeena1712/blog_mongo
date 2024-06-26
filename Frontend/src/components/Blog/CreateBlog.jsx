@@ -1,22 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
+import { useForm } from "react-hook-form"; 
 import Input from "../Input.jsx";
-import Wrapper from "../Wrapper.jsx";
-import { fetchCategories } from "../../app/categorySlice.js";
-import { addBlog } from "../../app/blogSlice.js";
-import { axiosPrivate } from "../../axiosInstance.js";
+import Wrapper from "../Wrapper.jsx"; 
+import useAxiosPrivate from "../../Hooks/useAxiosPrivate.js";
 
 function CreateBlog() {
+  const axios = useAxiosPrivate();
   const [error, setError] = useState("");
-  const dispatch = useDispatch();
-  
-  useEffect(() => {
-    dispatch(fetchCategories());
-  }, [dispatch]);
-
-  const categories = useSelector((state) => state.categories.categories);
+  const [categories, setCategories] = useState([]);
   const { register, handleSubmit, reset } = useForm();
+
+
+  useEffect( () =>{
+    fetchCategories();
+  }, [])
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get('/api/categories');
+      setCategories(response.data);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
 
   const handleBlog = async (data) => {
     try {

@@ -7,12 +7,9 @@ import Wrapper from "../Wrapper.jsx";
 import { updateBlog, getBlog, fetchBlogs } from "../../app/blogSlice.js";
 
 function EditBlog() {
-    const { id } = useParams();
-    const dispatch = useDispatch();
+    const { id } = useParams(); 
     const { register, handleSubmit, setValue, watch } = useForm();
-    const [currentImage, setCurrentImage] = useState(null);
-    const categories = useSelector(state => state.categories.categories);
-    const blog = dispatch(getBlog(id));
+    const [currentImage, setCurrentImage] = useState(null); 
 
     useEffect(() => {
         if (!blog) {
@@ -41,8 +38,6 @@ function EditBlog() {
         } else { 
           formData.append('blogImage', blog.blogImage);
         }
-      
-        dispatch(updateBlog({ id, blogData: formData }));
       };
       
 
