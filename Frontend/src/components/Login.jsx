@@ -7,7 +7,7 @@ import Button from "./Button.jsx";
 // import axios from '../axiosInstance.js';
 import useAxiosPrivate from '../Hooks/useAxiosPrivate.js';
 import { useAuth } from "../Authcontext.jsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
   const navigate = useNavigate();
@@ -46,12 +46,12 @@ function Login() {
         </h2>
         <p className="mt-2 text-center text-base text-[#254336]">
           Don't have any account ?{" "}
-          <a
-            href="/signup"
+          <Link
+            to="/signup"
             className="font-medium  text-primary transition-all duration-200 hover:underline text-[#254336]"
           >
             Sign Up
-          </a>
+          </Link>
         </p>
         {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
@@ -77,7 +77,16 @@ function Login() {
               Sign in
             </Button>
           </div>
+          <p>Forgot your password</p>
         </form>
+        <p className="mt-2 text-center text-base text-[#254336]">
+          <Link
+            to="/forgot-password"
+            className="font-medium  text-primary transition-all duration-200 hover:underline text-[#254336]"
+            >
+            Forgot Your Password ?
+          </Link>
+        </p>
       </div>
     </div>
     </Wrapper>

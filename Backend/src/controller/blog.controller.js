@@ -40,24 +40,27 @@ const createBlog = async (req, res) => {
     res.status(404).send(error);
   }
 };
-
+ 
 const updateBlog = async (req, res) => {
   try {
+    console.log('req.body : ', req.body);
+    console.log('req.params : ', req.params);
     const { title, content, categoryId, userId } = req.body;
-    const blog = await Blog.findByIdAndUpdate(req.params.id, {
+    const blog = await Blog.findByIdAndUpdate(req.params.blog, {
       title,
       content,
       categoryId,
       userId,
-      blogImage,
-    });
+    },{ new: true });
 
     if (!blog) {
+      console.log("Couldn't update blog blog is not found ");
       return res.status(404).send("Couldn't update blog");
     }
-
-    return res.status(201).json(blog);
+     
+    return res.status(201).json(blog.data);
   } catch (error) {
+    console.log("Error updating blog : ", error.message);
     return res.status(404).send(error);
   }
 };

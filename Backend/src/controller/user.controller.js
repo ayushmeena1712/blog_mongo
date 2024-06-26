@@ -169,11 +169,13 @@ const logout = (req, res) => {
 
 const forgotPassword = async (req, res) => {
   try {
+    console.log('req.body : ', req.body);
     const { emailOrUsername } = req.body;
     const user = await User.findOne({
       $or: [{ userName: emailOrUsername }, { email: emailOrUsername }],
     });
     if (!user) {
+      console.log("User not found");
       return res.status(404).json({ message: "User not found" });
     }
 
@@ -187,10 +189,10 @@ const forgotPassword = async (req, res) => {
     user.verificationTokenExpires = Date.now() + 3600000;
     await user.save();
 
-    const verificationUrl = `http://localhost:${process.env.PORT}/api/users/verify-forgot-password/${verificationToken}`;
+    const verificationUrl = `${process.env.CORS_ORIGIN}/forgot-password/${verificationToken}`;
     await sendingMail({
       from: "no-reply@example.com",
-      to: user.email, // Ensure you're sending the email to the correct user email
+      to: user.email,
       subject: "Password Reset Request",
       html: `
         <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
@@ -215,6 +217,8 @@ const forgotPassword = async (req, res) => {
 
 const verifyForgotPassword = async (req, res) => {
   try {
+    console.log('req.params : ', req.params);
+    console.log('req.body : ', req.body);
     const { secret } = req.params;
     const { newPassword } = req.body;
 
@@ -223,6 +227,7 @@ const verifyForgotPassword = async (req, res) => {
     }
 
     const decoded = JWT.verify(secret, process.env.JWTSECRET);
+    console.log('decoded : ', decoded);
     const user = await User.findById(decoded.id);
 
     if (

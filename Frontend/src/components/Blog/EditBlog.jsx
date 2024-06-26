@@ -1,67 +1,86 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import Input from "../Input.jsx";
 import Wrapper from "../Wrapper.jsx";
-import { updateBlog, getBlog, fetchBlogs } from "../../app/blogSlice.js";
+import useAxiosPrivate from "../../usePrivateAxios.js";
 
 function EditBlog() {
+    const navigate = useNavigate();
+    const axios = useAxiosPrivate();
     const { id } = useParams(); 
-    const { register, handleSubmit, setValue, watch } = useForm();
-    const [currentImage, setCurrentImage] = useState(null); 
+    const [blog, setBlog] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [categories, setCategories] = useState([]);
+    const { register, handleSubmit, reset } = useForm();
 
     useEffect(() => {
-        if (!blog) {
-            dispatch(fetchBlogs());
-        }
-    }, [blog, dispatch]);
+        fetchCategories();
+        fetchBlog();
+    }, []);
 
-    useEffect(() => {
-        if (blog) {
-            setValue("title", blog.title);
-            setValue("content", blog.content);
-            setValue("categoryId", blog.categoryId);
-            setCurrentImage(blog.blogImage);
+    const fetchCategories = async () => {
+        try {
+            const response = await axios.get('/api/categories');
+            setCategories(response.data);
+        } catch (error) {
+            console.error('Error fetching categories:', error);
         }
-    }, [blog, setValue]);
+    };
 
-    const handleBlogUpdate = (data) => {
-        const formData = new FormData();
-        formData.append('title', data.title);
-        formData.append('content', data.content);
-        formData.append('categoryId', data.categoryId);
-        formData.append('userId', blog.userId);
-       
-        if (data.blogImage && data.blogImage.length > 0) {
-          formData.append('blogImage', data.blogImage[0]);
-        } else { 
-          formData.append('blogImage', blog.blogImage);
+    const fetchBlog = async () => {
+        try {
+            setLoading(true);
+            const response = await axios.get(`/api/blogs/${id}`);
+            console.log("blog: ", response.data);
+            setBlog(response.data);
+            reset(response.data);
+            setLoading(false);
+        } catch (error) {
+            console.error("Error fetching blog:", error);
+            setLoading(false);
         }
-      };
-      
+    };
 
-    const blogImage = watch("blogImage");
+    const handleBlogUpdate = async (data) => {
+        try {
+            const formData = new FormData();
+            formData.append('title', data.title);
+            formData.append('content', data.content);
+            formData.append('categoryId', data.categoryId);
+            formData.append('userId', blog.userId);
 
-    useEffect(() => {
-        if (blogImage && blogImage.length > 0) {
-            const file = blogImage[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    setCurrentImage(reader.result);
-                };
-                reader.readAsDataURL(file);
-            }
+            setLoading(true);
+            const response = await axios.put(`/api/blogs/${id}`, formData);
+            setBlog(response.data);
+            setLoading(false);
+            navigate(`/userprofile`);
+        } catch (error) {
+            console.log("Error updating blog:", error.message);
+            setLoading(false);
         }
-    }, [blogImage]);
+    };
+
+    if (loading) {
+        return <div className="text-center mt-8">Loading...</div>;
+    }
+
+    if (!blog) {
+        return (
+            <div className="w-full h-[60vh] flex justify-center items-center rounded-xl ">
+                <h1 className="text-4xl font-bold text-gray-700 bg-white/20 px-8 py-5 rounded-3xl">
+                    Blog not found
+                </h1>
+            </div>
+        );
+    }
 
     return (
         <Wrapper className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-[#254336] bg-opacity-60 rounded-lg">
             <div className="max-w-4xl w-full space-y-8 p-10 bg-white bg-opacity-80 backdrop-blur-md rounded-lg shadow-lg">
                 <div>
                     <h2 className="text-center text-3xl font-bold text-gray-900">
-                        Edit Your 
+                        Edit Your
                         <span className="text-4xl font-serif font-extrabold text-[#95D2B3] p-2"> Blog</span> Post
                     </h2>
                     <p className="mt-2 text-center text-sm text-gray-600 italic">
@@ -72,34 +91,29 @@ function EditBlog() {
                     <Input
                         type="text"
                         label="Title"
+                        defaultValue={blog.title}
                         className="text-lg"
                         {...register("title", { required: true })}
-                    />
-                    <Input
-                        type="text"
-                        label="Content"
-                        className="text-lg"
-                        {...register("content", { required: true })}
                     />
                     <div>
                         <label className="block font-bold mb-2" htmlFor="blogImage">
                             Blog Image
                         </label>
-                        {currentImage && (
+                        {blog.blogImage && (
                             <div className="mb-4 w-full flex justify-center">
-                                <img src={currentImage} alt="Current Blog" className="w-32 h-32 object-cover rounded-md" />
+                                <img src={blog.blogImage} alt="Blog Image" className="w-1/2 h-auto object-cover rounded-md" />
                             </div>
                         )}
-                        <Input
-                            type="file"
-                            label="Blog Image"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            {...register("blogImage")}
-                            id="blogImage"
-                        />
                     </div>
+                    <Input
+                        type="textarea"
+                        label="Content"
+                        defaultValue={blog.content}
+                        className="text-lg py-20"
+                        {...register("content", { required: true })}
+                    />
                     <div>
-                        <label htmlFor="categoryId">
+                        <label htmlFor="categoryId" className="block font-bold mb-2">
                             Category
                         </label>
                         <select
@@ -109,8 +123,8 @@ function EditBlog() {
                         >
                             <option value="">Select a category</option>
                             {categories.map(category => (
-                                <option key={category.id} value={category.id}>
-                                    {category.name}
+                                <option key={category._id} value={category._id} selected={category._id === blog.categoryId}>
+                                    {category.category}
                                 </option>
                             ))}
                         </select>

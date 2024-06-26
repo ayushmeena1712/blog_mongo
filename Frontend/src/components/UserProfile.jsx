@@ -70,7 +70,7 @@ function UserProfile() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {blogs?.map((blog) => (
                 <div key={blog._id} className="relative">
-                  <Link to={`/editBlog/${blog._id}`}>
+                  <Link to={`/edit/${blog._id}`}>
                     <BlogTile
                       img={blog.blogImage}
                       title={blog.title}

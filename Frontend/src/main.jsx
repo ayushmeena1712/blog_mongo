@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import { Provider } from 'react-redux'
+import App from './App.jsx' 
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import './index.css' 
 import Login from "./pages/LoginPage.jsx";
@@ -16,6 +15,8 @@ import {AuthProvider} from "./Authcontext.jsx";
 import EditBlogPage from './pages/EditBlogPage.jsx'
 import BlogDetailPage from './pages/BlogDetailPage.jsx'
 import AuthLayout from "./components/AuthLayout.jsx"
+import ForgotPasswordVerify from './components/ForgotPasswordVerify.jsx'
+
 
 const router = createBrowserRouter([
     {
@@ -39,6 +40,14 @@ const router = createBrowserRouter([
             element: (
                 <AuthLayout authentication={false}>
                     <ForgotPassword />
+                </AuthLayout>
+            ),
+          },
+          {
+            path: "/forgot-password/:secret",
+            element: (
+                <AuthLayout authentication={false}>
+                    <ForgotPasswordVerify />
                 </AuthLayout>
             ),
           },
@@ -95,6 +104,15 @@ const router = createBrowserRouter([
                 <AuthLayout authentication>
                     {" "}
                     <UserProfile />
+                </AuthLayout>
+              ),
+          },
+          {
+            path: "/edit/:id",
+            element: (
+                <AuthLayout authentication>
+                    {" "}
+                    <EditBlogPage />
                 </AuthLayout>
               ),
           },

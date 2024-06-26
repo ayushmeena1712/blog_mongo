@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form"; 
 import Input from "../Input.jsx";
 import Wrapper from "../Wrapper.jsx"; 
-import useAxiosPrivate from "../../Hooks/useAxiosPrivate.js";
+import useAxiosPrivate from "../../usePrivateAxios.js";
+import { useNavigate } from "react-router-dom";
+
 
 function CreateBlog() {
+  const navigate = useNavigate();
   const axios = useAxiosPrivate();
   const [error, setError] = useState("");
   const [categories, setCategories] = useState([]);
@@ -41,13 +44,13 @@ function CreateBlog() {
       // }
       
 
-      const response = await axiosPrivate.post('/api/blogs/add-blog', formData, {
+      const response = await axios.post('/api/blogs/add-blog', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }        
       });
       console.log("Response from server:", response.data);
-
+      navigate('/userprofile');
       reset();
     } catch (err) {
       console.error("Error submitting blog:", err);

@@ -109,7 +109,7 @@ function BlogDetailPage() {
 
   return (
     <div>
-    <header className="w-full bg-[#224e38] text-white px-5 py-4 rounded-xl mb-6 shadow-lg">
+    <header className="w-full bg-[#36BA98] bg-opacity-80  text-white px-5 py-4 rounded-xl mb-6 shadow-lg">
       <h1 className="text-4xl font-bold mb-2">{blog.title}</h1>
       <div className="flex justify-end w-fit bg-white/50 px-2 py-1 rounded-xl">
         <p className="text-md text-right ">{new Date(blog.createdAt).toLocaleDateString()}</p>
@@ -126,7 +126,7 @@ function BlogDetailPage() {
         </div>
         <div className="flex-1 lg:order-1">
           <h2 className="text-2xl font-semibold mb-4">Content</h2>
-          <div className="prose lg:prose-lg text-gray-800 bg-white">
+          <div className="prose lg:prose-lg text-gray-800 bg-white text-lg text-justify">
             <p>{blog.content}</p>
           </div>
         </div>
