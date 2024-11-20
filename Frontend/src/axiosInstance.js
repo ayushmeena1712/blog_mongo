@@ -1,6 +1,6 @@
 import axios from 'axios';
 import useAxiosPrivate from './usePrivateAxios';
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = process.env.VITE_URL_PATH_BACKEND;
 
 export default axios.create({
     baseURL: BASE_URL
