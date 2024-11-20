@@ -10,6 +10,7 @@ function UserProfile() {
   const axios = useAxiosPrivate();
   const fullName = 'ayush';
   const [blogs, setBlogs] = useState([]);
+  const [user, setUser] = useState();
   const [contextMenu, setContextMenu] = useState({ visible: false, blogId: null, positionX: 0, positionY: 0 });
 
   useEffect(() => {
@@ -17,6 +18,7 @@ function UserProfile() {
       try {
         const response = await axios.post('/api/blogs/userProfile');
         setBlogs(response.data.blog);
+        setUser(response.data.user);
       } catch (error) {
         console.error('Error fetching user blogs:', error);
       }
@@ -51,13 +53,15 @@ function UserProfile() {
     <Wrapper className="h-full py-40">
       <div className="flex items-center justify-center w-full">
         <div className="bg-white/40 max-w-7xl w-full space-y-8 p-10 backdrop-blur-none bg-opacity-80 rounded-lg shadow-lg">
+        {user && 
           <div className="flex items-center mb-8">
-            <img src="" alt="User Avatar" className="w-16 h-16 rounded-full mr-4" />
+            <img src={`${user.userImage}`} alt="User Avatar" className="w-16 h-16 rounded-full mr-4" />
             <div>
-              <h2 className="text-3xl font-bold text-gray-900">{fullName}</h2>
-              <p className="text-gray-600">@{fullName.toLowerCase().replace(/\s+/g, '')}</p>
+              <h2 className="text-3xl font-bold text-gray-900">{user.userName}</h2>
+              <p className="text-gray-600">@{user.userName.toLowerCase().replace(/\s+/g, '')}</p>
             </div>
           </div>
+          }
 
           {blogs.length === 0 ? (
             <p>No blogs available.</p>

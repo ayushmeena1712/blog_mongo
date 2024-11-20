@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios from '../axiosInstance.js';
 import { useForm } from "react-hook-form";
 import Wrapper from "./Wrapper.jsx";
 import Input from "./Input.jsx";

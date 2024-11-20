@@ -16,7 +16,7 @@ import EditBlogPage from './pages/EditBlogPage.jsx'
 import BlogDetailPage from './pages/BlogDetailPage.jsx'
 import AuthLayout from "./components/AuthLayout.jsx"
 import ForgotPasswordVerify from './components/ForgotPasswordVerify.jsx'
-import LayoutForUserForm from './LayoutForUserForm.jsx'
+import LayoutForUserFormPage from './pages/LayoutForUserFormPage.jsx'
 
 
 const router = createBrowserRouter([
@@ -84,7 +84,7 @@ const router = createBrowserRouter([
     },
     {
       path: '/',
-      element: <LayoutForUserForm />,
+      element: <LayoutForUserFormPage />,
       children: [
         {
           path: 'login',

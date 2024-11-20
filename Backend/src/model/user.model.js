@@ -9,6 +9,10 @@ const userSchema = new Schema({
         trim: true, 
         index: true
     },
+    userImage: {
+        type: String,
+        required: true,
+    },
     email: {
         type: String,
         required: true,

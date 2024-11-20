@@ -38,7 +38,7 @@ const register = async (req, res) => {
 
     const user = await User.create({
       fullName,
-      avatar: avatar.url,
+      userImage: avatar.url, 
       email,
       password: hashedPassword,
       userName: userName.toLowerCase(),
@@ -156,7 +156,7 @@ const login = async (req, res) => {
       .status(200)
       .json({ message: "Login successful", accessToken, refreshToken });
   } catch (error) {
-    console.log("error in login ", error);
+    console.log("Error in login ", error);
     return res.status(500).json({ message: error.message });
   }
 };
@@ -168,6 +168,7 @@ const logout = (req, res) => {
 };
 
 const forgotPassword = async (req, res) => {
+  console.log("hello");
   try {
     console.log('req.body : ', req.body);
     const { emailOrUsername } = req.body;
@@ -211,6 +212,7 @@ const forgotPassword = async (req, res) => {
       .status(202)
       .json({ message: "Check your email for password reset link" });
   } catch (error) {
+    console.log(error.message);
     return res.status(500).json({ message: error.message });
   }
 };

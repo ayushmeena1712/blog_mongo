@@ -28,6 +28,8 @@ function CreateBlog() {
   };
 
   const handleBlog = async (data) => {
+    console.log("Button clicked");
+    alert("submit");
     try {
       const formData = new FormData();
       formData.append("title", data.title);

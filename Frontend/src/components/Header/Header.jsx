@@ -12,12 +12,12 @@ function Header() {
 
   const navItems = [
     { name: "Home", slug: "/" },
-    { name: "Login", slug: "/login", active: !authStatus },
     { name: "About", slug: "/about" },
-    { name: "Signup", slug: "/signup", active: !authStatus },
     { name: "All Blogs", slug: "/all-blogs"},
     { name: "Add Blog", slug: "/add-blog", active: authStatus },
     { name: "Profile", slug: "/userprofile", active: authStatus },
+    { name: "Signup", slug: "/signup", active: !authStatus },
+    { name: "Login", slug: "/login", active: !authStatus },
     // { name: "Logout", slug: "/logout", active: authStatus },
   ];
 

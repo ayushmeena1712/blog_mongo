@@ -4,12 +4,12 @@ import { Category } from "../model/category.model.js";
 
 const createBlog = async (req, res) => {
   try { 
-    console.log('req.body : ', req.body);
+    console.log('req.body : ', req.body); 
     console.log('req.file : ', req.file);
     console.log('req.user : ', req.user);
     const { title, content, categoryId } = req.body;
     console.log(title, content, categoryId);
-
+ 
     const localFilePath = req.file.path;
     const url = await uploadOnCloudinary(localFilePath);
     const userId = req.user._id;
@@ -119,7 +119,7 @@ const getUserBlogs = async (req, res) => {
     console.log("user : ", req.user);
     const blog = await Blog.find({ userId: userId });
     console.log('blog : ', blog.data);
-    return res.status(200).json({blog: blog, userImage: req.user.userImage}); 
+    return res.status(200).json({blog: blog, user: {userImage: req.user.userImage, userName: req.user.userName}});e 
   } catch (error) {
     console.error("Error : ", error.message);
     return res.status(500).json({ message: error.message });
