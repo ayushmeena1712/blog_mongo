@@ -1,6 +1,6 @@
 import axios from 'axios';
 import useAxiosPrivate from './usePrivateAxios';
-const BASE_URL = process.env.VITE_URL_PATH_BACKEND;
+const BASE_URL = https://blog-mongo.onrender.com;
 
 export default axios.create({
     baseURL: BASE_URL
