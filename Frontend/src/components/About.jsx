@@ -19,7 +19,7 @@ function About() {
         <h1  
 	  className="text-4xl font-bold text-[#254336] mb-6">About Us</h1>
         <div className="mb-8">
-          <p className='text-2xl text-[#575650] py-10'>I am, <span className="text-3xl font-bold text-[#c57e1a]">Ayush Meena</span></p>
+          <p className='text-2xl text-[#575650] py-10'>I am, <span className="text-3xl font-bold text-[#c57e1a]">Rashi Gupta</span></p>
 	    <p className="mx-50 text-lg leading-relaxed text-pretty text-[#4e4d44] mb-8">
             I have a keen interest in constantly learning and keeping up-to-date with the latest advancements in technology. This drive has enabled me to build robust applications and enhance my problem-solving skills.
           </p> 

@@ -1,51 +1,63 @@
 import React, { useState, useEffect } from 'react';
 
 function Home() {
-  const generateRandomColor = () => {
-    return `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
-  };
+  const getRandomDirection = () => Math.random() > 0.5 ? 1 : -1;
 
   const [colors, setColors] = useState({
-    color1: generateRandomColor(),
-    color2: generateRandomColor(),
-    color3: generateRandomColor(),
+    r: Math.floor(Math.random() * 256),
+    g: Math.floor(Math.random() * 256),
+    b: Math.floor(Math.random() * 256),
+    dr: getRandomDirection(),
+    dg: getRandomDirection(),
+    db: getRandomDirection(),
   });
 
-  useEffect(() => { 
-    const changeGradient = () => {
-      setColors({
-        color1: generateRandomColor(),
-        color2: generateRandomColor(),
-        color3: generateRandomColor(),
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setColors(prev => {
+        const newR = Math.min(255, Math.max(0, prev.r + prev.dr));
+        const newG = Math.min(255, Math.max(0, prev.g + prev.dg));
+        const newB = Math.min(255, Math.max(0, prev.b + prev.db));
+ 
+        const newDr = newR === 255 || newR === 0 ? -prev.dr : prev.dr;
+        const newDg = newG === 255 || newG === 0 ? -prev.dg : prev.dg;
+        const newDb = newB === 255 || newB === 0 ? -prev.db : prev.db;
+
+        return {
+          r: newR,
+          g: newG,
+          b: newB,
+          dr: newDr,
+          dg: newDg,
+          db: newDb,
+        };
       });
-    };
-    const intervalId = setInterval(changeGradient, 3000);
+    }, 20); 
 
     return () => clearInterval(intervalId);
   }, []);
 
   const gradientStyle = {
-    backgroundImage: `linear-gradient(45deg, ${colors.color1}, ${colors.color2}, ${colors.color3})`,
+    backgroundImage: `linear-gradient(45deg, rgb(${colors.r}, ${colors.g}, ${colors.b}), rgb(${colors.b}, ${colors.r}, ${colors.g}), rgb(${colors.g}, ${colors.b}, ${colors.r}))`,
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
     display: 'inline-block',
-    transition: 'background 3s ease-in-out'
+    transition: 'background-image 0.5s linear',
   };
 
   return (
-    <div className='h-full w-full'> 
-      <section className="  py-12">
+    <div className='h-full w-full'>
+      <section className="py-12">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl font-bold mb-4 py-3" style={gradientStyle}>Welcome to Our Blog Application</h1>
-          <p className="text-lg text-gray-700 mb-6">Discover insightful articles on a wide range of topics including technology, health, finance, and more.</p>
-          <button className="bg-[#6B8A7A] text-white py-2 px-4 rounded-full text-lg">Explore Blogs</button>
-        </div>
-      </section>
- 
-      <section className=" 0 py-12">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-[#944454] text-3xl font-bold mb-8">About Us</h2>
-          <p className="text-lg text-gray-700 max-w-3xl mx-auto">Our blog is dedicated to providing readers with insightful articles on a wide range of topics including technology, health, finance, and more. Our team of experienced writers ensures that each post is informative, engaging, and up-to-date with the latest trends and information.</p>
+          <h1 className="text-5xl font-bold mb-4 py-3" style={gradientStyle}>
+            Welcome to Our Blog Application
+          </h1>
+          <p className="text-lg text-gray-700 mb-6">
+            Discover insightful articles on a wide range of topics including technology, health, finance, and more.
+          </p>
+          <button className="bg-[#6B8A7A] text-white py-2 px-4 rounded-full text-lg">
+            Explore Blogs
+          </button>
         </div>
       </section>
  

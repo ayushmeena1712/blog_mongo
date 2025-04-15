@@ -20,7 +20,7 @@ app.use('/api/users', userRouter);
 app.use('/api/blogs', blogRouter);
 app.use('/api/categories', categoryRouter); 
 app.get("/", (req, res)=>{
-      res.status(200).send("chal ja re");
+      res.status(200).send("working fine.");
 })
 
 export { app };
