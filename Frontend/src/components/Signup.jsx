@@ -12,14 +12,14 @@ function Signup() {
   const navigate = useNavigate();
   const create = async (data) => {
     setError("");
-    try { 
+    try {
       const formData = new FormData();
       formData.append("userImage", data.userImage[0]);
       formData.append("fullName", data.fullName);
       formData.append("userName", data.userName);
       formData.append("email", data.email);
       formData.append("password", data.password);
-
+      console.log(formData);
       const response = await axios.post('/api/users/register', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
